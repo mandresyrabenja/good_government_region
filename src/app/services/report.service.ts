@@ -18,6 +18,10 @@ export class ReportService {
     return this.http.get<any[]>(this.baseUrl + "/regions");
   }
 
+  getRegionReports() : Observable<any[]> {
+    return this.http.get<any[]>(this.baseUrl + "/reports");
+  }
+
   /**
    * Avoir les signalements pas encore attribué à une région
    */

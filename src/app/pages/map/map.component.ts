@@ -1,4 +1,7 @@
+import { RegionService } from './../../services/regionservice';
 import { Component, OnInit } from "@angular/core";
+import { ReportService } from 'src/app/services/report.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 declare const google: any;
 
@@ -14,9 +17,21 @@ draggable?: boolean;
   templateUrl: "map.component.html"
 })
 export class MapComponent implements OnInit {
-  constructor() {}
+  reports : any[] = [];
+
+  constructor(private reportService : ReportService) {}
 
   ngOnInit() {
+
+    // Signalements de cet région
+    this.reportService.getRegionReports().subscribe(
+      (response : any[]) => {
+        this.reports = response;
+      },
+      (error: HttpErrorResponse) => {
+        console.log(error);
+      }
+    );
 
         var myLatlng = new google.maps.LatLng(-18.867924434761566, 47.52602792942393);
         var mapOptions = {
