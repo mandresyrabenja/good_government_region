@@ -1,4 +1,3 @@
-import { AssignReportComponent } from './../../pages/assign-report/assign-report.component';
 import { CrudRegionComponent } from './../../pages/crud-region/crud-region.component';
 import { Routes } from "@angular/router";
 
@@ -9,6 +8,7 @@ import { NotificationsComponent } from "../../pages/notifications/notifications.
 import { UserComponent } from "../../pages/user/user.component";
 import { TablesComponent } from "../../pages/tables/tables.component";
 import { TypographyComponent } from "../../pages/typography/typography.component";
+import { DisplayReportComponent } from 'src/app/pages/display-report/display-report.component';
 
 export const AdminLayoutRoutes: Routes = [
   { path: "statistic", component: DashboardComponent },
@@ -19,5 +19,5 @@ export const AdminLayoutRoutes: Routes = [
   { path: "tables", component: TablesComponent },
   { path: "typography", component: TypographyComponent },
   {path: "crud-region", component: CrudRegionComponent},
-  {path: "assign-report", component: AssignReportComponent}
+  {path: "display-report", component: DisplayReportComponent}
 ];

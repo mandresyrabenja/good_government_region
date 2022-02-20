@@ -1,3 +1,4 @@
+import { DisplayReportComponent } from './pages/display-report/display-report.component';
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
@@ -16,7 +17,6 @@ import { CrudRegionComponent } from './pages/crud-region/crud-region.component';
 import { StatisticService } from './services/statistic.service';
 import { AuthInterceptor } from './services/auth-interceptor.service';
 
-import { AssignReportComponent } from './pages/assign-report/assign-report.component';
 import { LoginComponent } from './layouts/login/login.component';
 import { AuthService } from "./services/auth.service";
 import AuthGuard from "./services/auth-guard.service";
@@ -33,7 +33,7 @@ import { RegionService } from "./services/regionservice";
     AppRoutingModule,
     ToastrModule.forRoot()
   ],
-  declarations: [AppComponent, AdminLayoutComponent, CrudRegionComponent,AssignReportComponent, LoginComponent],
+  declarations: [AppComponent, AdminLayoutComponent, CrudRegionComponent,DisplayReportComponent, LoginComponent],
   providers: [
     StatisticService,
     AuthService,

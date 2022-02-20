@@ -13,6 +13,11 @@ export const ROUTES: RouteInfo[] = [
     title: "Carte des signalements",
     icon: "icon-world",
     class: ""
+  },{
+    path: "display-report",
+    title: "Signalement",
+    icon: "icon-world",
+    class: ""
   },
   {
     path: "icons",
