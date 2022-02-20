@@ -14,13 +14,13 @@ const routes: Routes = [
   },
   {
     path: "admin",
-    canActivate: [AuthGuard],
-    redirectTo: "admin/statistic",
+    // canActivate: [AuthGuard],
+    redirectTo: "admin/maps",
     pathMatch: "full"
   },
   {
     path: "admin",
-    canActivate: [AuthGuard],
+    // canActivate: [AuthGuard],
     component: AdminLayoutComponent,
     children: [
       {

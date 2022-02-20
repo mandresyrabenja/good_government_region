@@ -7,63 +7,43 @@ declare interface RouteInfo {
   class: string;
 }
 export const ROUTES: RouteInfo[] = [
+
   {
-    path: "statistic",
-    title: "Statistiques",
-    icon: "icon-chart-pie-36",
-    class: ""
-  }
-  ,
-  {
-    path: "crud-region",
-    title: "Régions",
+    path: "maps",
+    title: "Carte des signalements",
     icon: "icon-world",
     class: ""
-  }
-  ,
+  },
   {
-    path: "assign-report",
-    title: "Signalements",
+    path: "icons",
+    title: "Icons",
+    icon: "icon-atom",
+    class: ""
+  },
+  {
+    path: "notifications",
+    title: "Notification",
     icon: "icon-bell-55",
     class: ""
+  },
+  {
+    path: "user",
+    title: "User",
+    icon: "icon-single-02",
+    class: ""
+  },
+  {
+    path: "tables",
+    title: "Table",
+    icon: "icon-puzzle-10",
+    class: ""
+  },
+  {
+    path: "typography",
+    title: "Typography",
+    icon: "icon-align-center",
+    class: ""
   }
-  // ,
-  // {
-  //   path: "icons",
-  //   title: "Icons",
-  //   icon: "icon-atom",
-  //   class: ""
-  // },
-  // {
-  //   path: "maps",
-  //   title: "Maps",
-  //   icon: "icon-world",
-  //   class: ""
-  // },
-  // {
-  //   path: "notifications",
-  //   title: "Notification",
-  //   icon: "icon-bell-55",
-  //   class: ""
-  // },
-  // {
-  //   path: "user",
-  //   title: "User",
-  //   icon: "icon-single-02",
-  //   class: ""
-  // },
-  // {
-  //   path: "tables",
-  //   title: "Table",
-  //   icon: "icon-puzzle-10",
-  //   class: ""
-  // },
-  // {
-  //   path: "typography",
-  //   title: "Typography",
-  //   icon: "icon-align-center",
-  //   class: ""
-  // }
 ];
 
 @Component({
