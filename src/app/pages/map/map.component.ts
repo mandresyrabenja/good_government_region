@@ -23,6 +23,16 @@ export class MapComponent implements OnInit {
 
   ngOnInit() {
 
+    function addInfoWindow(map, marker, message) {
+        var infoWindow = new google.maps.InfoWindow({
+            content: message
+        });
+
+        google.maps.event.addListener(marker, 'click', function () {
+            infoWindow.open(map, marker);
+        });
+    }
+
     // Signalements de cet région
     this.reportService.getRegionReports().subscribe(
       (response : any[]) => {
@@ -227,14 +237,37 @@ export class MapComponent implements OnInit {
 
       // Marquer des signalements sur la carte
       for(let i = 0; i < this.reports.length; i++) {
-        var latLng = new google.maps.LatLng(this.reports[i].latitude, this.reports[i].longitude);
-        var marker = new google.maps.Marker({
+
+
+        // Ajout du point au map
+        let latLng = new google.maps.LatLng(this.reports[i].latitude, this.reports[i].longitude);
+        let marker = new google.maps.Marker({
             position: latLng,
             title: this.reports[i].title
         });
-
-        // Ajout du point au map
         marker.setMap(map);
+
+        // Infos minimale du signalement
+        let contentString =
+          "<div class=\"text-info\">" + this.reports[i].title + "</div>" +
+          "<div>" +
+              this.reports[i].description +
+          "</div>"
+        let infowindow = new google.maps.InfoWindow({
+          content: contentString,
+        });
+
+        //Affichage des infos minimale du signalement seulement quand le souris passe
+        marker.addListener("mouseover", () => {
+          infowindow.open({
+            anchor: marker,
+            map,
+            shouldFocus: false,
+          });
+        });
+        marker.addListener('mouseout', function() {
+          infowindow.close();
+      });
       }
 
       },
