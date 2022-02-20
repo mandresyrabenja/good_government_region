@@ -2,6 +2,7 @@ import { Component, OnInit, TemplateRef, ViewChild } from "@angular/core";
 import { ReportService } from 'src/app/services/report.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from "ngx-toastr";
 
 declare const google: any;
 
@@ -25,7 +26,8 @@ export class MapComponent implements OnInit {
   imageToShow: any;
   isImageLoading = false;
 
-  constructor(private reportService : ReportService,private modalService: NgbModal) {}
+  constructor(private reportService : ReportService,private modalService: NgbModal
+    , private toastr : ToastrService) {}
 
   @ViewChild('report_details_modal') reportDetailsModal : TemplateRef<any>;
 
@@ -61,6 +63,41 @@ export class MapComponent implements OnInit {
       }
     );
   }
+
+  /**
+   * Changer le status d'un signalement
+   */
+  changeReportStatus(status: string) {
+    this.reportService.changeReportStatus(this.currentReport.id, status)
+    .subscribe(
+      (response) => {
+        this.toastr.success(
+          '<span class="tim-icons icon-check-2" [data-notify]="icon"></span> Signalement mis à jour avec succès',
+          '',
+          {
+            enableHtml: true,
+            closeButton: false,
+            toastClass: "alert alert-success alert-with-icon",
+            positionClass: 'toast-top-center'
+          }
+        );
+        this.modalReference.close();
+      },
+      (error: HttpErrorResponse) => {
+        this.toastr.error(
+          '<span class="tim-icons icon-alert-circle-exc" [data-notify]="icon"></span> Echec du changement de status',
+          '',
+          {
+            enableHtml: true,
+            closeButton: false,
+            toastClass: "alert alert-danger alert-with-icon",
+            positionClass: 'toast-top-center'
+          }
+        );
+      }
+    );
+  }
+
   ngOnInit() {
 
     // Signalements de cet région
