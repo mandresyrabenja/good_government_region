@@ -22,11 +22,45 @@ export class MapComponent implements OnInit {
   currentReport: any;
   modalReference: any;
   closeResult: string;
+  imageToShow: any;
+  isImageLoading = false;
 
   constructor(private reportService : ReportService,private modalService: NgbModal) {}
 
   @ViewChild('report_details_modal') reportDetailsModal : TemplateRef<any>;
 
+  /**
+   * Créer une image à partir d'un fichier obtenu à partir d'une requête HTTP
+   * @param image Reponse HTTP
+   */
+   createImageFromBlob(image: Blob) {
+    let reader = new FileReader();
+    reader.addEventListener(
+        "load",
+        () => { this.imageToShow = reader.result; },
+        false
+    );
+
+    if (image) { reader.readAsDataURL(image); }
+  }
+
+  /**
+   * Avoir le photo d'un signalement
+   * @param idReport ID su signalement
+   */
+  getImageFromService(idReport) {
+    this.isImageLoading = true;
+    this.reportService.getImage(idReport).subscribe(
+      data => {
+        this.createImageFromBlob(data);
+        this.isImageLoading = false;
+      },
+      error => {
+        this.isImageLoading = false;
+        console.log(error);
+      }
+    );
+  }
   ngOnInit() {
 
     // Signalements de cet région
@@ -281,6 +315,7 @@ export class MapComponent implements OnInit {
         // Afficher le détails du signalement dans une autre page
         // si le marqeur sur le map est cliqué
         marker.addListener('click', () => {
+          this.getImageFromService(this.reports[i].id);
           this.displayReportDetails(i);
         });
       }

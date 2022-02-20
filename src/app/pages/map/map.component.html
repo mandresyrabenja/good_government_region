@@ -56,7 +56,13 @@
             <div class="col-md-12">Photo</div>
         </div>
         <div class="row">
-            <div class="col-md-12"><img src="./assets/img/james.jpg" alt="report-photo"></div>
+            <div class="col-md-12">
+                <img [src]="imageToShow" class="card-img-top" alt="Photo" height="250" width="200" *ngIf="!isImageLoading; else noImageFound">
+            </div>
         </div>
     </div>
+</ng-template>
+
+<ng-template #noImageFound>
+    <img data-src="holder.js/100px180/" alt="Photo" />
 </ng-template>
