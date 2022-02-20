@@ -1,4 +1,3 @@
-import { DisplayReportComponent } from './pages/display-report/display-report.component';
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
@@ -13,7 +12,6 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 
 import { AppRoutingModule } from "./app-routing.module";
 import { ComponentsModule } from "./components/components.module";
-import { CrudRegionComponent } from './pages/crud-region/crud-region.component';
 import { StatisticService } from './services/statistic.service';
 import { AuthInterceptor } from './services/auth-interceptor.service';
 
@@ -33,7 +31,7 @@ import { RegionService } from "./services/regionservice";
     AppRoutingModule,
     ToastrModule.forRoot()
   ],
-  declarations: [AppComponent, AdminLayoutComponent, CrudRegionComponent,DisplayReportComponent, LoginComponent],
+  declarations: [AppComponent, AdminLayoutComponent, LoginComponent],
   providers: [
     StatisticService,
     AuthService,

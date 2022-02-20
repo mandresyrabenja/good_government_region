@@ -14,39 +14,9 @@ export const ROUTES: RouteInfo[] = [
     icon: "icon-world",
     class: ""
   },{
-    path: "display-report",
-    title: "Signalement",
-    icon: "icon-world",
-    class: ""
-  },
-  {
-    path: "icons",
-    title: "Icons",
-    icon: "icon-atom",
-    class: ""
-  },
-  {
-    path: "notifications",
-    title: "Notification",
-    icon: "icon-bell-55",
-    class: ""
-  },
-  {
-    path: "user",
-    title: "User",
-    icon: "icon-single-02",
-    class: ""
-  },
-  {
-    path: "tables",
-    title: "Table",
-    icon: "icon-puzzle-10",
-    class: ""
-  },
-  {
-    path: "typography",
-    title: "Typography",
-    icon: "icon-align-center",
+    path: "report-list",
+    title: "Signalements",
+    icon: "icon-bullet-list-67",
     class: ""
   }
 ];
