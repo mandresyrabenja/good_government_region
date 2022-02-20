@@ -1,11 +1,64 @@
-
 <div class=" content">
-  <div class=" row">
-    <div class=" col-md-12">
-      <div class=" card card-plain">
-        <div class=" card-header">Google Maps</div>
-        <div class=" card-body"><div class=" map" id="map"></div></div>
-      </div>
+    <div class=" row">
+        <div class=" col-md-12">
+            <div class=" card card-plain">
+                <div class=" card-header">Carte des signalements</div>
+                <div class=" card-body">
+                    <div class=" map" id="map"></div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
+
+<ng-template #report_details_modal let-modal>
+    <div class="modal-header bg-dark">
+        {{ currentReport.title }}
+        <button aria-label="Close" class=" close" data-dismiss="modal" type="button" (click)="modal.dismiss('Cross click')">
+          <i class=" tim-icons icon-simple-remove"> </i>
+        </button>
+    </div>
+    <div class="modal-body bg-dark">
+        <div class="row">
+            <div class="col-md-6 font-weight-bold">Date</div>
+            <div class="col-md-6">{{ currentReport.date }}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 font-weight-bold">Description</div>
+            <div class="col-md-6">{{ currentReport.description }}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">Status</div>
+            <div class="col-md-6">
+                <div ngbDropdown>
+                    <div data-toggle="dropdown" ngbDropdownToggle>
+                        <button class="btn btn-success">Nouveau</button>
+                    </div>
+                    <ul class="bg-dark" ngbDropdownMenu>
+                        <li>
+                            <button class="btn btn-danger btn-block" (click)="changeReportStatus('new')">Nouveau</button>
+                        </li>
+                        <li>
+                            <button class="btn btn-info btn-block" (click)="changeReportStatus('processing')">En cours</button>
+                        </li>
+                        <li>
+                            <button class="btn btn-success btn-block" (click)="changeReportStatus('done')">Fini</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">Photo</div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <img [src]="imageToShow" class="card-img-top" alt="Photo" height="250" width="200" *ngIf="!isImageLoading; else noImageFound">
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #noImageFound>
+    <img data-src="holder.js/100px180/" alt="Photo" />
+</ng-template>

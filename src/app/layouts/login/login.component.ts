@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit {
         let token = response.headers.get('Authorization');
         localStorage.setItem('token', token);
         this.authService.isAuth = true;
-        this.router.navigateByUrl('admin/statistic');
+        this.router.navigateByUrl('admin/maps');
       },
       (error: HttpErrorResponse) => {
         this.loginFailed();

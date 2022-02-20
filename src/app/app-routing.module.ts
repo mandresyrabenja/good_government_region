@@ -15,7 +15,7 @@ const routes: Routes = [
   {
     path: "admin",
     canActivate: [AuthGuard],
-    redirectTo: "admin/statistic",
+    redirectTo: "admin/maps",
     pathMatch: "full"
   },
   {

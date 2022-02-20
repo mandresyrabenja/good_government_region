@@ -12,11 +12,9 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 
 import { AppRoutingModule } from "./app-routing.module";
 import { ComponentsModule } from "./components/components.module";
-import { CrudRegionComponent } from './pages/crud-region/crud-region.component';
 import { StatisticService } from './services/statistic.service';
 import { AuthInterceptor } from './services/auth-interceptor.service';
 
-import { AssignReportComponent } from './pages/assign-report/assign-report.component';
 import { LoginComponent } from './layouts/login/login.component';
 import { AuthService } from "./services/auth.service";
 import AuthGuard from "./services/auth-guard.service";
@@ -33,7 +31,7 @@ import { RegionService } from "./services/regionservice";
     AppRoutingModule,
     ToastrModule.forRoot()
   ],
-  declarations: [AppComponent, AdminLayoutComponent, CrudRegionComponent,AssignReportComponent, LoginComponent],
+  declarations: [AppComponent, AdminLayoutComponent, LoginComponent],
   providers: [
     StatisticService,
     AuthService,

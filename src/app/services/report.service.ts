@@ -18,6 +18,14 @@ export class ReportService {
     return this.http.get<any[]>(this.baseUrl + "/regions");
   }
 
+  getRegionReports() : Observable<any[]> {
+    return this.http.get<any[]>(this.baseUrl + "/reports");
+  }
+
+  changeReportStatus(id: number, status: string) : Observable<any> {
+    return this.http.put(this.baseUrl + "/reports/" + id, {}, { params: {"status" : status} });
+  }
+
   /**
    * Avoir les signalements pas encore attribué à une région
    */

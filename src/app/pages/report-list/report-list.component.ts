@@ -7,10 +7,10 @@ import { NgForm } from '@angular/forms';
 import { Region } from 'src/app/interface/region';
 
 @Component({
-  selector: 'app-crud-region',
-  templateUrl: './crud-region.component.html'
+  selector: 'app-report-list',
+  templateUrl: './report-list.component.html'
 })
-export class CrudRegionComponent implements OnInit {
+export class ReportListComponent implements OnInit {
   regions : any[];
   actualRegion : any;
   modalReference: any;
@@ -22,25 +22,6 @@ export class CrudRegionComponent implements OnInit {
     private modalService: NgbModal, private toastr : ToastrService) { }
 
   ngOnInit(): void {
-
-    this.regionService.getAllRegions(0).subscribe(
-      (response : any[]) => {
-        this.regions = response;
-      },
-      (error: HttpErrorResponse) => {
-        console.log(error);
-      }
-    );
-
-    this.regionService.getPageNumber().subscribe(
-      (response : any) => {
-        this.pageNumber = response;
-      },
-      (error: HttpErrorResponse) => {
-        console.log(error);
-      }
-    );
-
   }
 
   /**
