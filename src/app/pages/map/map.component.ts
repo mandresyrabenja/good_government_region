@@ -238,11 +238,24 @@ export class MapComponent implements OnInit {
       // Marquer des signalements sur la carte
       for(let i = 0; i < this.reports.length; i++) {
 
+        // Coleur du marquer suivant le status du signalement
+        // Vert: fini
+        // Bleu: En cours de traitement
+        // Rouge: Nouveau
+        var reportIcon = '';
+        if( this.reports[i].status == 'new' )
+          reportIcon = './assets/img/marker-red-icon.png';
+        else if( this.reports[i].status == 'processing' )
+          reportIcon = './assets/img/marker-blue-icon.png';
+        else if( this.reports[i].status == 'done' )
+          reportIcon = './assets/img/marker-green-icon.png';
+
 
         // Ajout du point au map
         let latLng = new google.maps.LatLng(this.reports[i].latitude, this.reports[i].longitude);
         let marker = new google.maps.Marker({
             position: latLng,
+            icon: reportIcon,
             title: this.reports[i].title
         });
         marker.setMap(map);
