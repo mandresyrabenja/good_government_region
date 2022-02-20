@@ -1,16 +1,17 @@
-import { RegionService } from './../../services/regionservice';
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, TemplateRef, ViewChild } from "@angular/core";
 import { ReportService } from 'src/app/services/report.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 declare const google: any;
 
 interface Marker {
-lat: number;
-lng: number;
-label?: string;
-draggable?: boolean;
-}
+  lat: number;
+  lng: number;
+  label?: string;
+  draggable?: boolean;
+  }
+
 
 @Component({
   selector: "app-map",
@@ -18,20 +19,15 @@ draggable?: boolean;
 })
 export class MapComponent implements OnInit {
   reports : any[] = [];
+  currentReport: any;
+  modalReference: any;
+  closeResult: string;
 
-  constructor(private reportService : ReportService) {}
+  constructor(private reportService : ReportService,private modalService: NgbModal) {}
+
+  @ViewChild('report_details_modal') reportDetailsModal : TemplateRef<any>;
 
   ngOnInit() {
-
-    function addInfoWindow(map, marker, message) {
-        var infoWindow = new google.maps.InfoWindow({
-            content: message
-        });
-
-        google.maps.event.addListener(marker, 'click', function () {
-            infoWindow.open(map, marker);
-        });
-    }
 
     // Signalements de cet région
     this.reportService.getRegionReports().subscribe(
@@ -280,7 +276,13 @@ export class MapComponent implements OnInit {
         });
         marker.addListener('mouseout', function() {
           infowindow.close();
-      });
+        });
+
+        // Afficher le détails du signalement dans une autre page
+        // si le marqeur sur le map est cliqué
+        marker.addListener('click', () => {
+          this.displayReportDetails(i);
+        });
       }
 
       },
@@ -290,5 +292,36 @@ export class MapComponent implements OnInit {
     );
 
 
+  }
+
+  /**
+   * Ouvrir le modal pour afficer les détails d'un signalement
+   * @param index Indice du signalement au tableau des signalements
+   */
+  private displayReportDetails(index : number) {
+    this.currentReport = this.reports[index];
+    this.open( this.reportDetailsModal );
+  }
+
+  private open(content) {
+    this.modalReference = this.modalService.open(content, {centered: false, size: 'md'});
+    this.modalReference.result.then(
+      (result) => {
+        this.closeResult = `Closed with: ${result}`;
+      },
+      (reason) => {
+        this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+      }
+    );
+  }
+
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return  `with: ${reason}`;
+    }
   }
 }
