@@ -1,6 +1,7 @@
+import { ReportService } from 'src/app/services/report.service';
 import { ToastrService } from 'ngx-toastr';
 import { RegionService } from './../../services/regionservice';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgForm } from '@angular/forms';
@@ -17,53 +18,78 @@ export class ReportListComponent implements OnInit {
   closeResult: string;
   currentPage : number = 0;
   pageNumber : number;
+  reports : any[] = [];
+  currentReport: any;
+  imageToShow: any;
+  isImageLoading = false;
+
 
   constructor(private regionService : RegionService,
-    private modalService: NgbModal, private toastr : ToastrService) { }
+    private modalService: NgbModal, private toastr : ToastrService,
+    private reportService : ReportService) { }
 
-  ngOnInit(): void {
+  @ViewChild('report_details_modal') reportDetailsModal : TemplateRef<any>;
+
+  ngOnInit(){
+     // Signalements de cet région
+     this.reportService.getRegionReports().subscribe(
+      (response : any[]) => {
+        this.reports = response;
+      });
   }
 
   /**
-   * Page des régions suivant
+   * Ouvrir le modal pour afficer les détails d'un signalement
+   * @param index Indice du signalement au tableau des signalements
    */
-   nextPage() {
-    this.regionService.getAllRegions(this.currentPage+1).subscribe(
-      (response : any[]) => {
-        this.regions = response;
-        this.currentPage++;
+   private displayReportDetails(index : number) {
+    this.currentReport = this.reports[index];
+    this.imageToShow = this.getImageFromService(this.reports[index]);
+    this.open( this.reportDetailsModal );
+  }
+
+  /**
+   * Créer une image à partir d'un fichier obtenu à partir d'une requête HTTP
+   * @param image Reponse HTTP
+   */
+   createImageFromBlob(image: Blob) {
+    let reader = new FileReader();
+    reader.addEventListener(
+        "load",
+        () => { this.imageToShow = reader.result; },
+        false
+    );
+
+    if (image) { reader.readAsDataURL(image); }
+  }
+
+  /**
+   * Avoir le photo d'un signalement
+   * @param idReport ID su signalement
+   */
+  getImageFromService(idReport) {
+    this.isImageLoading = true;
+    this.reportService.getImage(idReport).subscribe(
+      data => {
+        this.createImageFromBlob(data);
+        this.isImageLoading = false;
       },
-      (error: HttpErrorResponse) => {
+      error => {
+        this.isImageLoading = false;
         console.log(error);
       }
     );
   }
 
   /**
-   * Page des régions précedent
+   * Changer le status d'un signalement
    */
-   previousPage() {
-    this.regionService.getAllRegions(this.currentPage-1).subscribe(
-      (response : any[]) => {
-        this.regions = response;
-        this.currentPage--;
-      },
-      (error: HttpErrorResponse) => {
-        console.log(error);
-      }
-    );
-  }
-
-  /**
-   * Effacer un région
-   * @param i Indice du région au tableau des régions
-   */
-  deleteRegion(i : number) {
-    this.regionService.deleteRegion(this.regions[i].id)
+  changeReportStatus(status: string) {
+    this.reportService.changeReportStatus(this.currentReport.id, status)
     .subscribe(
       (response) => {
         this.toastr.success(
-          '<span class="tim-icons icon-check-2" [data-notify]="icon"></span> Région supprimé',
+          '<span class="tim-icons icon-check-2" [data-notify]="icon"></span> Signalement mis à jour avec succès',
           '',
           {
             enableHtml: true,
@@ -72,19 +98,11 @@ export class ReportListComponent implements OnInit {
             positionClass: 'toast-top-center'
           }
         );
-        this.regionService.getAllRegions(this.currentPage).subscribe(
-          (response : any[]) => {
-            this.regions = response;
-            this.modalReference.close();
-          },
-          (error: HttpErrorResponse) => {
-            console.log(error);
-          }
-        );
+        this.modalReference.close();
       },
       (error: HttpErrorResponse) => {
         this.toastr.error(
-          '<span class="tim-icons icon-alert-circle-exc" [data-notify]="icon"></span> Echec du suppression du région',
+          '<span class="tim-icons icon-alert-circle-exc" [data-notify]="icon"></span> Echec du changement de status',
           '',
           {
             enableHtml: true,
@@ -93,119 +111,8 @@ export class ReportListComponent implements OnInit {
             positionClass: 'toast-top-center'
           }
         );
-        return;
-      }
-    );;
-  }
-
-  /**
-   * Modifier un région
-   * @param form Formulaire du modication du région
-   */
-  executeModifyRegion(form: NgForm) {
-    this.regionService.modifyRegion(this.actualRegion.id, form.value.region_name)
-    .subscribe(
-      (response) => {
-        this.toastr.success(
-          '<span class="tim-icons icon-check-2" [data-notify]="icon"></span> Région modifié avec succès',
-          '',
-          {
-            enableHtml: true,
-            closeButton: false,
-            toastClass: "alert alert-success alert-with-icon",
-            positionClass: 'toast-top-center'
-          }
-        );
-        this.regionService.getAllRegions(this.currentPage).subscribe(
-          (response : any[]) => {
-            this.regions = response;
-            this.modalReference.close();
-          },
-          (error: HttpErrorResponse) => {
-            console.log(error);
-          }
-        );
-      },
-      (error: HttpErrorResponse) => {
-        this.toastr.error(
-          '<span class="tim-icons icon-alert-circle-exc" [data-notify]="icon"></span> Echec de modification du région',
-          '',
-          {
-            enableHtml: true,
-            closeButton: false,
-            toastClass: "alert alert-danger alert-with-icon",
-            positionClass: 'toast-top-center'
-          }
-        );
-        return;
       }
     );
-  }
-
-  /**
-   * Créer un région vers la base de données
-   * @param form Formulaire d'ajout de région
-   */
-  addRegion(form: NgForm) {
-    let region : Region = {
-      name: form.value.region_name,
-      password: form.value.region_password
-    };
-
-    this.regionService.createRegion(region)
-    .subscribe(
-      (response) => {
-        this.toastr.success(
-          '<span class="tim-icons icon-check-2" [data-notify]="icon"></span> Nouveau région créé avec succès',
-          '',
-          {
-            enableHtml: true,
-            closeButton: false,
-            toastClass: "alert alert-success alert-with-icon",
-            positionClass: 'toast-top-center'
-          }
-        );
-        this.regionService.getAllRegions(this.currentPage).subscribe(
-          (response : any[]) => {
-            this.regions = response;
-            this.modalReference.close();
-          },
-          (error: HttpErrorResponse) => {
-            console.log(error);
-          }
-        );
-      },
-      (error: HttpErrorResponse) => {
-        this.toastr.error(
-          '<span class="tim-icons icon-alert-circle-exc" [data-notify]="icon"></span> Echec du création du nouveau région',
-          '',
-          {
-            enableHtml: true,
-            closeButton: false,
-            toastClass: "alert alert-danger alert-with-icon",
-            positionClass: 'toast-top-center'
-          }
-        );
-        return;
-      }
-    );
-  }
-
-  /**
-   * Ouvrir le modal pour modifier un région
-   * @param index Indice du région au tableau des régions
-   * @param content Réference de l'html modal
-   */
-  modifyRegion(index : number, content) {
-    this.actualRegion = this.regions[index];
-    this.open(content);
-  }
-
-  /**
-   * Ouvrir le modal pour créer un région
-   */
-   createRegion(content) {
-    this.open(content);
   }
 
   open(content) {
