@@ -6,6 +6,10 @@ import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class ReportService {
+  searchReportWithCategory(keyword: string, category: string) : Observable<any>{
+    return this.http.get(this.baseUrl + "/reports/search?keyword=" + keyword + "&category=" + category);
+  }
+
   private baseUrl = environment.baseUrl;
 
   constructor(private http: HttpClient) {}

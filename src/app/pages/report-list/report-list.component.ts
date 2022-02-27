@@ -1,3 +1,4 @@
+import { Report } from './../../interface/report';
 import { ReportService } from 'src/app/services/report.service';
 import { ToastrService } from 'ngx-toastr';
 import { RegionService } from './../../services/regionservice';
@@ -23,6 +24,7 @@ export class ReportListComponent implements OnInit {
   imageToShow: any;
   isImageLoading = false;
   reportCategories: string [] = [];
+  noReportFound: boolean = false;
 
 
   constructor(private regionService : RegionService,
@@ -52,6 +54,17 @@ export class ReportListComponent implements OnInit {
     });
   }
 
+  private searchReport(searchForm : NgForm) {
+    this.reportService.searchReportWithCategory(searchForm.value.keyword, searchForm.value.category).subscribe(
+      (result : Report[]) => {
+        this.reports = result;
+        if(this.reports.length === 0)
+          this.noReportFound = true;
+        else
+          this.noReportFound = false;
+      }
+    );
+  }
 
   /**
    *  Filtre pour ne retenir que les élèments uniques d'un tableau

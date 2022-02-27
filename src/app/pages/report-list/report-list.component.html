@@ -33,16 +33,21 @@
             </table>
         </div>
     </div>
+    <div *ngIf="noReportFound" class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <p class="text-center">Aucun signalement trouvé</p>
+        </div>
+    </div>
 </div>
 
 <ng-template #search let-modal>
-    <div class=" modal-header">
-        <form class="form-inline" role="form">
+    <div class=" modal-header bg-success">
+        <form (ngSubmit)="searchReport(searchForm)" #searchForm="ngForm" class="form-inline" role="form">
             <div class="form-group">
-                <input type="text" class="form-control bg-dark" id="keyword" name="keyword" placeholder="Rechercher...">
+                <input type="text" class="form-control bg-dark" id="keyword" name="keyword" placeholder="Rechercher..." ngModel>
             </div>
             <div class="form-group">
-                <select name="category" id="category" class="form-control bg-dark">
+                <select name="category" id="category" class="form-control bg-dark" ngModel>
                   <option *ngFor="let category of reportCategories" [value]="category">{{category}}</option>
                 </select>
             </div>
