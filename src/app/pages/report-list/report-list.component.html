@@ -8,6 +8,23 @@
         </li>
     </div>
     <div class="row">
+        <div class="col-md-12">
+            <div ngbDropdown>
+                <div data-toggle="dropdown" ngbDropdownToggle>
+                    <button class="btn btn-success">Trier par</button>
+                </div>
+                <ul class="bg-dark" ngbDropdownMenu>
+                    <li>
+                        <button class="btn btn-block" (click)="orderByName()">Nom</button>
+                    </li>
+                    <li>
+                        <button class="btn btn-block" (click)="orderByDate()">Date</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-md-8">
             <table class="table">
                 <thead>

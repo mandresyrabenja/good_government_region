@@ -73,6 +73,7 @@ export class ReportListComponent implements OnInit {
       (response : any[]) => {
         this.reports = response;
         this.currentPage++;
+        this.noReportFound = false;
       },
       (error: HttpErrorResponse) => {
         console.log(error);
@@ -88,6 +89,7 @@ export class ReportListComponent implements OnInit {
       (response : any[]) => {
         this.reports = response;
         this.currentPage--;
+        this.noReportFound = false;
       },
       (error: HttpErrorResponse) => {
         console.log(error);
@@ -106,6 +108,21 @@ export class ReportListComponent implements OnInit {
           this.noReportFound = false;
       }
     );
+  }
+
+  orderByDate() {
+    this.reports = this.reports.sort((a, b) => {
+      return <any>new Date(b.date) - <any>new Date(a.date);
+    });
+  }
+
+
+  orderByName() {
+    this.reports = this.reports.sort((a, b) => {
+      if(a.title < b.title) { return -1; }
+      if(a.title > b.title) { return 1; }
+      return 0;
+    });
   }
 
   /**
