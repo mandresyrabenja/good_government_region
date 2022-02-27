@@ -21,7 +21,7 @@
     <div class="modal-body bg-dark">
         <div class="row">
             <div class="col-md-6 font-weight-bold">Date</div>
-            <div class="col-md-6">{{ currentReport.date }}</div>
+            <div class="col-md-6">{{ currentReport.date | date : 'dd-MM-yyyy' }}</div>
         </div>
         <div class="row">
             <div class="col-md-6 font-weight-bold">Description</div>

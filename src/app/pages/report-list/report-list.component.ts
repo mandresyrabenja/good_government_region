@@ -1,3 +1,4 @@
+import { Report } from './../../interface/report';
 import { ReportService } from 'src/app/services/report.service';
 import { ToastrService } from 'ngx-toastr';
 import { RegionService } from './../../services/regionservice';
@@ -22,6 +23,8 @@ export class ReportListComponent implements OnInit {
   currentReport: any;
   imageToShow: any;
   isImageLoading = false;
+  reportCategories: string [] = [];
+  noReportFound: boolean = false;
 
 
   constructor(private regionService : RegionService,
@@ -32,10 +35,105 @@ export class ReportListComponent implements OnInit {
 
   ngOnInit(){
      // Signalements de cet région
-     this.reportService.getRegionReports().subscribe(
+     this.reportService.getRegionReportsWithPage(0).subscribe(
       (response : any[]) => {
         this.reports = response;
       });
+
+    // Nombre des pages de signalements
+    this.reportService.getReportsPageNb().subscribe(
+      (response : number) => {
+        this.pageNumber = response;
+      },
+      (error: HttpErrorResponse) => {
+        console.log(error);
+      }
+    );
+
+    //Appel à l'API des catégories des signalements
+    this.reportService.getCategories().subscribe(
+      (response : string[]) => {
+        this.reportCategories = response;
+        // Majuscule premier lettre
+        for(let i = 0; i < this.reportCategories.length;i++) {
+          this.reportCategories[i] = this.reportCategories[i][0].toUpperCase()
+            + this.reportCategories[i].slice(1);
+        }
+        // Filtre pour faire un distinct
+        this.reportCategories = this.reportCategories.filter(this.onlyUnique);
+    });
+  }
+
+
+  /**
+   * Page des régions suivant
+   */
+   nextPage() {
+    this.reportService.getRegionReportsWithPage(this.currentPage+1).subscribe(
+      (response : any[]) => {
+        this.reports = response;
+        this.currentPage++;
+        this.noReportFound = false;
+      },
+      (error: HttpErrorResponse) => {
+        console.log(error);
+      }
+    );
+  }
+
+  /**
+   * Page des régions précedent
+   */
+   previousPage() {
+    this.reportService.getRegionReportsWithPage(this.currentPage-1).subscribe(
+      (response : any[]) => {
+        this.reports = response;
+        this.currentPage--;
+        this.noReportFound = false;
+      },
+      (error: HttpErrorResponse) => {
+        console.log(error);
+      }
+    );
+  }
+
+
+  private searchReport(searchForm : NgForm) {
+    this.reportService.searchReportWithCategory(searchForm.value.keyword, searchForm.value.category).subscribe(
+      (result : Report[]) => {
+        this.reports = result;
+        if(this.reports.length === 0)
+          this.noReportFound = true;
+        else
+          this.noReportFound = false;
+      }
+    );
+  }
+
+  orderByDate() {
+    this.reports = this.reports.sort((a, b) => {
+      return <any>new Date(b.date) - <any>new Date(a.date);
+    });
+  }
+
+
+  orderByName() {
+    this.reports = this.reports.sort((a, b) => {
+      if(a.title < b.title) { return -1; }
+      if(a.title > b.title) { return 1; }
+      return 0;
+    });
+  }
+
+  /**
+   *  Filtre pour ne retenir que les élèments uniques d'un tableau
+   * @param value Valeur de l'élèment du tableau
+   * @param index Indice de l'élèment du tableau
+   * @param self Le tableau
+   * @returns Un tableau qui contient des élèments uniques
+   */
+  private onlyUnique(value, index, self) {
+    return self.indexOf(value) === index;
   }
 
   /**

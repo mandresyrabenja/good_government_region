@@ -1,9 +1,35 @@
 <div class="content">
+    <div class="row col-md-12">
+        <li class=" search-bar input-group">
+            <button class=" btn btn-link" data-target="#searchModal" data-toggle="modal" (click)="open(search)" id="search-button">
+          <i class=" tim-icons icon-zoom-split"></i>
+          <span class=" d-lg-none d-md-block">Rechercher</span>
+        </button>
+        </li>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div ngbDropdown>
+                <div data-toggle="dropdown" ngbDropdownToggle>
+                    <button class="btn btn-success">Trier par</button>
+                </div>
+                <ul class="bg-dark" ngbDropdownMenu>
+                    <li>
+                        <button class="btn btn-block" (click)="orderByName()">Nom</button>
+                    </li>
+                    <li>
+                        <button class="btn btn-block" (click)="orderByDate()">Date</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-md-8">
             <table class="table">
                 <thead>
                     <tr>
+                        <th>Date</th>
                         <th class="text-center">Titre</th>
                         <th>Description</th>
                         <th></th>
@@ -12,6 +38,7 @@
                 <tbody>
 
                     <tr *ngFor="let report of reports; index as i">
+                        <td>{{report.date | date : 'dd-MM-yyyy'}}</td>
                         <td class="text-center">{{ report.title }}</td>
                         <td>{{ report.description }}</td>
                         <td class="td-actions text-right">
@@ -25,7 +52,41 @@
             </table>
         </div>
     </div>
+    <div *ngIf="noReportFound" class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <p class="text-center">Aucun signalement trouvé</p>
+        </div>
+    </div>
+    <div class="row">
+        <div *ngIf="currentPage != 0" class="col-xs-6 col-sm-6 col-md-6">
+            <button type="button" class="btn btn-success text-left" (click)="previousPage()">
+              <i class=" tim-icons icon-double-left"> </i>
+            </button>
+        </div>
+        <div *ngIf="currentPage != (pageNumber-1)" class="col-xs-6 col-sm-6 col-md-6">
+            <button type="button" class="btn btn-success text-right" (click)="nextPage()">
+              <i class=" tim-icons icon-double-right"> </i>
+            </button>
+        </div>
+    </div>
 </div>
+
+<ng-template #search let-modal>
+    <div class=" modal-header bg-success">
+        <form (ngSubmit)="searchReport(searchForm)" #searchForm="ngForm" class="form-inline" role="form">
+            <div class="form-group">
+                <input type="text" class="form-control bg-dark" id="keyword" name="keyword" placeholder="Rechercher..." ngModel>
+            </div>
+            <div class="form-group">
+                <select name="category" id="category" class="form-control bg-dark" ngModel>
+                  <option *ngFor="let category of reportCategories" [value]="category">{{category}}</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-success"><i class=" tim-icons icon-zoom-split"></i></button>
+        </form>
+    </div>
+
+</ng-template>
 
 <ng-template #report_details_modal let-modal>
     <div class="modal-header bg-dark">
@@ -37,7 +98,7 @@
     <div class="modal-body bg-dark">
         <div class="row">
             <div class="col-md-6 font-weight-bold">Date</div>
-            <div class="col-md-6">{{ currentReport.date }}</div>
+            <div class="col-md-6">{{ currentReport.date | date : 'dd-MM-yyyy' }}</div>
         </div>
         <div class="row">
             <div class="col-md-6 font-weight-bold">Description</div>

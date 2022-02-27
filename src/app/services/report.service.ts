@@ -6,9 +6,17 @@ import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class ReportService {
+  searchReportWithCategory(keyword: string, category: string) : Observable<any>{
+    return this.http.get(this.baseUrl + "/reports/search?keyword=" + keyword + "&category=" + category);
+  }
+
   private baseUrl = environment.baseUrl;
 
   constructor(private http: HttpClient) {}
+
+  getCategories() :Observable<any> {
+    return this.http.get(this.baseUrl + "/reports/keywords");
+  }
 
   assignReport(reportId, regionId) :Observable<any> {
     return this.http.put(this.baseUrl + "/reports/" + reportId + "?regionId=" + regionId, {});
@@ -17,6 +25,15 @@ export class ReportService {
   getAllRegions(): Observable<any[]> {
     return this.http.get<any[]>(this.baseUrl + "/regions");
   }
+
+  getReportsPageNb(): Observable<any> {
+    return this.http.get<any[]>(this.baseUrl + "/reports/page_nb");
+  }
+
+  getRegionReportsWithPage(page : number) : Observable<any[]> {
+    return this.http.get<any[]>(this.baseUrl + "/reports?page=" + page);
+  }
+
 
   getRegionReports() : Observable<any[]> {
     return this.http.get<any[]>(this.baseUrl + "/reports");
