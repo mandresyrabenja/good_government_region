@@ -1,4 +1,12 @@
 <div class="content">
+    <div class="row col-md-12">
+        <li class=" search-bar input-group">
+            <button class=" btn btn-link" data-target="#searchModal" data-toggle="modal" (click)="open(search)" id="search-button">
+          <i class=" tim-icons icon-zoom-split"></i>
+          <span class=" d-lg-none d-md-block">Rechercher</span>
+        </button>
+        </li>
+    </div>
     <div class="row">
         <div class="col-md-8">
             <table class="table">
@@ -26,6 +34,26 @@
         </div>
     </div>
 </div>
+
+<ng-template #search let-modal>
+    <div class=" modal-header">
+        <form class="form-inline" role="form">
+            <div class="form-group">
+                <input type="text" class="form-control bg-dark" id="keyword" name="keyword" placeholder="Rechercher...">
+            </div>
+            <div class="form-group">
+                <select name="category" id="category" class="form-control bg-dark">
+                  <option value="rano">Rano</option>
+                  <option value="Jiro">Jiro</option>
+                  <option value="rano">Rano</option>
+                  <option value="Jiro">Jiro</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-success"><i class=" tim-icons icon-zoom-split"></i></button>
+        </form>
+    </div>
+
+</ng-template>
 
 <ng-template #report_details_modal let-modal>
     <div class="modal-header bg-dark">
