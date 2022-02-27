@@ -10,6 +10,10 @@ export class ReportService {
 
   constructor(private http: HttpClient) {}
 
+  getCategories() :Observable<any> {
+    return this.http.get(this.baseUrl + "/reports/keywords");
+  }
+
   assignReport(reportId, regionId) :Observable<any> {
     return this.http.put(this.baseUrl + "/reports/" + reportId + "?regionId=" + regionId, {});
   }

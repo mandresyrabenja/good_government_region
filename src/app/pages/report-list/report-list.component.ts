@@ -22,6 +22,7 @@ export class ReportListComponent implements OnInit {
   currentReport: any;
   imageToShow: any;
   isImageLoading = false;
+  reportCategories: string [] = [];
 
 
   constructor(private regionService : RegionService,
@@ -36,6 +37,31 @@ export class ReportListComponent implements OnInit {
       (response : any[]) => {
         this.reports = response;
       });
+
+    //Appel à l'API des catégories des signalements
+    this.reportService.getCategories().subscribe(
+      (response : string[]) => {
+        this.reportCategories = response;
+        // Majuscule premier lettre
+        for(let i = 0; i < this.reportCategories.length;i++) {
+          this.reportCategories[i] = this.reportCategories[i][0].toUpperCase()
+            + this.reportCategories[i].slice(1);
+        }
+        // Filtre pour faire un distinct
+        this.reportCategories = this.reportCategories.filter(this.onlyUnique);
+    });
+  }
+
+
+  /**
+   *  Filtre pour ne retenir que les élèments uniques d'un tableau
+   * @param value Valeur de l'élèment du tableau
+   * @param index Indice de l'élèment du tableau
+   * @param self Le tableau
+   * @returns Un tableau qui contient des élèments uniques
+   */
+  private onlyUnique(value, index, self) {
+    return self.indexOf(value) === index;
   }
 
   /**
