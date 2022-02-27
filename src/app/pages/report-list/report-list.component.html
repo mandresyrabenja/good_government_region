@@ -38,6 +38,18 @@
             <p class="text-center">Aucun signalement trouvé</p>
         </div>
     </div>
+    <div class="row">
+        <div *ngIf="currentPage != 0" class="col-xs-6 col-sm-6 col-md-6">
+            <button type="button" class="btn btn-success text-left" (click)="previousPage()">
+              <i class=" tim-icons icon-double-left"> </i>
+            </button>
+        </div>
+        <div *ngIf="currentPage != (pageNumber-1)" class="col-xs-6 col-sm-6 col-md-6">
+            <button type="button" class="btn btn-success text-right" (click)="nextPage()">
+              <i class=" tim-icons icon-double-right"> </i>
+            </button>
+        </div>
+    </div>
 </div>
 
 <ng-template #search let-modal>

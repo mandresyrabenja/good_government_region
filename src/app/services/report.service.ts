@@ -26,6 +26,15 @@ export class ReportService {
     return this.http.get<any[]>(this.baseUrl + "/regions");
   }
 
+  getReportsPageNb(): Observable<any> {
+    return this.http.get<any[]>(this.baseUrl + "/reports/page_nb");
+  }
+
+  getRegionReportsWithPage(page : number) : Observable<any[]> {
+    return this.http.get<any[]>(this.baseUrl + "/reports?page=" + page);
+  }
+
+
   getRegionReports() : Observable<any[]> {
     return this.http.get<any[]>(this.baseUrl + "/reports");
   }

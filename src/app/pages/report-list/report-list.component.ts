@@ -35,10 +35,20 @@ export class ReportListComponent implements OnInit {
 
   ngOnInit(){
      // Signalements de cet région
-     this.reportService.getRegionReports().subscribe(
+     this.reportService.getRegionReportsWithPage(0).subscribe(
       (response : any[]) => {
         this.reports = response;
       });
+
+    // Nombre des pages de signalements
+    this.reportService.getReportsPageNb().subscribe(
+      (response : number) => {
+        this.pageNumber = response;
+      },
+      (error: HttpErrorResponse) => {
+        console.log(error);
+      }
+    );
 
     //Appel à l'API des catégories des signalements
     this.reportService.getCategories().subscribe(
@@ -53,6 +63,38 @@ export class ReportListComponent implements OnInit {
         this.reportCategories = this.reportCategories.filter(this.onlyUnique);
     });
   }
+
+
+  /**
+   * Page des régions suivant
+   */
+   nextPage() {
+    this.reportService.getRegionReportsWithPage(this.currentPage+1).subscribe(
+      (response : any[]) => {
+        this.reports = response;
+        this.currentPage++;
+      },
+      (error: HttpErrorResponse) => {
+        console.log(error);
+      }
+    );
+  }
+
+  /**
+   * Page des régions précedent
+   */
+   previousPage() {
+    this.reportService.getRegionReportsWithPage(this.currentPage-1).subscribe(
+      (response : any[]) => {
+        this.reports = response;
+        this.currentPage--;
+      },
+      (error: HttpErrorResponse) => {
+        console.log(error);
+      }
+    );
+  }
+
 
   private searchReport(searchForm : NgForm) {
     this.reportService.searchReportWithCategory(searchForm.value.keyword, searchForm.value.category).subscribe(
